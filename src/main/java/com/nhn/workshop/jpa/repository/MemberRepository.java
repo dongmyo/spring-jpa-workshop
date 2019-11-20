@@ -20,7 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<MemberIdGetter> findAllBy(Pageable pageable);
 
     // TODO: #2 ID 조건에 해당하는 Entity들에만 Fetch JOIN 적용
-    @Query("select m from Member as m")
+    @Query("select m from Member as m left join fetch m.details as md")
     List<Member> getMemberWithAssociations(Collection<Long> memberIds);
 
 }

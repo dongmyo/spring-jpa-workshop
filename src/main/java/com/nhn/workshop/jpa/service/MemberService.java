@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -77,13 +75,16 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<String> getPagedMemberDetails(Pageable pageable) {
         // TODO #3: Pagination 쿼리 실행
-        Page<MemberIdGetter> memberIdPage = Page.empty(pageable);
+        Page<MemberIdGetter> memberIdPage = memberRepository.findAllBy(pageable);
 
         // TODO #4: Pagination 쿼리로 추출한 ID 값
-        Set<Long> memberIds = new HashSet<>();
+        Set<Long> memberIds = memberIdPage.getContent()
+                                          .stream()
+                                          .map(MemberIdGetter::getMemberId)
+                                          .collect(Collectors.toSet());
 
         // TODO #5: ID 조건을 가지고 Fetch JOIN을 수행
-        List<Member> members = new ArrayList<>();
+        List<Member> members = memberRepository.getMemberWithAssociations(memberIds);
 
         return members.stream()
                       .map(Member::getDetails)
