@@ -3,11 +3,13 @@ package com.nhn.workshop.jpa.entity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class Member {
     private LocalDateTime createDate;
 
     // TODO: 연관관계 설정.
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
     private List<MemberDetail> details = new ArrayList<>();
 
 }
