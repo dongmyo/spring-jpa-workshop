@@ -1,5 +1,6 @@
 package com.nhn.workshop.jpa.service;
 
+import com.nhn.workshop.jpa.dto.OrderIdGetter;
 import com.nhn.workshop.jpa.entity.Customer;
 import com.nhn.workshop.jpa.entity.Item;
 import com.nhn.workshop.jpa.entity.Order;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,9 +99,19 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> getPagedItemNames(Pageable pageable) {
-        // NOTE #2: Pagination + Fetch JOIN 쿼리를 실행
-        Page<Order> orderPage = orderRepository.getPagedOrderWithAssociations(pageable);
-        return getAllItemNames(orderPage.getContent());
+        // NOTE #3: Pagination 쿼리 실행
+        Page<OrderIdGetter> orderIdPage = orderRepository.findAllBy(pageable);
+
+        // NOTE #4: Pagination 쿼리로 추출한 ID 값
+        Set<Long> orderIds = orderIdPage.getContent()
+                                        .stream()
+                                        .map(OrderIdGetter::getOrderId)
+                                        .collect(Collectors.toSet());
+
+        // NOTE #5: ID 조건을 가지고 Fetch JOIN을 수행
+        List<Order> orders = orderRepository.getOrderWithAssociations(orderIds);
+
+        return getAllItemNames(orders);
     }
 
     private List<String> getAllItemNames(List<Order> orders) {
