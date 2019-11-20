@@ -30,7 +30,6 @@ public class Member {
     @Column(name = "create_dt")
     private LocalDateTime createDate;
 
-    // TODO: 연관관계 설정.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
     private List<MemberDetail> details = new ArrayList<>();
 

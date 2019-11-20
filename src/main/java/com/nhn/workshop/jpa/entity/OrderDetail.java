@@ -22,7 +22,6 @@ public class OrderDetail {
     @Column(name = "order_detail_id")
     private Long orderDetailId;
 
-    // NOTE: 연관관계 설정 (@ManyToOne, @JoinColumn)
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

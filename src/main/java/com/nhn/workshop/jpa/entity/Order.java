@@ -28,7 +28,6 @@ public class Order {
     @Column(name = "order_dt")
     private LocalDateTime orderDate;
 
-    // NOTE: "mappedBy" 속성 설정, @JoinColumn은 없앰.
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderDetail> details = new ArrayList<>();
 

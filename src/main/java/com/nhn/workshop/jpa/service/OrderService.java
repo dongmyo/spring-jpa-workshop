@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -37,6 +41,42 @@ public class OrderService {
         order.getDetails().add(orderDetail2);
 
         orderRepository.save(order);
+
+        Order order2 = new Order();
+        order2.setOrderDate(LocalDateTime.now());
+
+        OrderDetail orderDetail3 = new OrderDetail();
+        orderDetail3.setOrder(order2);
+        orderDetail3.setType("type1");
+        orderDetail3.setDescription("order2-type1");
+
+        order2.getDetails().add(orderDetail3);
+
+        orderRepository.save(order2);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getOrdersDescriptions() {
+        // NOTE: select * from Orders
+        return orderRepository.findAll()
+                              .stream()
+                              .map(Order::getDetails)
+                              .flatMap(Collection::stream)
+                              .map(OrderDetail::getDescription)
+                              .filter(Objects::nonNull)
+                              .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> readOrdersDescriptions() {
+        // NOTE: select o.*, od.* from Orders as o left join OrderDetails od on o.order_id = od.order_id
+        return orderRepository.getOrderWithDetails()
+                              .stream()
+                              .map(Order::getDetails)
+                              .flatMap(Collection::stream)
+                              .map(OrderDetail::getDescription)
+                              .filter(Objects::nonNull)
+                              .collect(Collectors.toList());
     }
 
 }

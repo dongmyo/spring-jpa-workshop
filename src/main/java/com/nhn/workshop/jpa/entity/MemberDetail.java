@@ -22,7 +22,6 @@ public class MemberDetail {
     @Column(name = "member_detail_id")
     private Long memberDetailId;
 
-    // TODO: 연관관계 설정
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
