@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO #1: @NamedEntityGraph로 Entity Graph 설정
 @NamedEntityGraph(name = "memberWithDetails", attributeNodes = {
         @NamedAttributeNode("details")
 })

@@ -1,22 +1,18 @@
 package com.nhn.workshop.jpa.repository;
 
 import com.nhn.workshop.jpa.entity.Order;
-import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @EntityGraph("orderWithCustomer")
-    List<Order> getAllBy();
-
-    @EntityGraph("orderWithOrderItems")
-    List<Order> readAllBy();
-
-    @EntityGraph("orderWithCustomerAndOrderItems")
-    List<Order> queryAllBy();
-
-    @EntityGraph("orderWithCustomerAndOrderItemsAndItem")
-    List<Order> findAllBy();
+    // NOTE #1: Pagination + FETCH JOIN 쿼리
+    @Query(value = "select o from Order as o"
+                   + " inner join fetch o.customer as c"
+                   + " left join fetch o.orderItems as oi"
+                   + " left join fetch oi.item as i",
+            countQuery = "select count(o) from Order as o")
+    Page<Order> getPagedOrderWithAssociations(Pageable pageable);
 
 }

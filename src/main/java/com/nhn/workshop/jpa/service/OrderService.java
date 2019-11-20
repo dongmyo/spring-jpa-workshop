@@ -7,6 +7,8 @@ import com.nhn.workshop.jpa.entity.OrderItem;
 import com.nhn.workshop.jpa.repository.CustomerRepository;
 import com.nhn.workshop.jpa.repository.ItemRepository;
 import com.nhn.workshop.jpa.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,28 +96,10 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getOrdersByFindAll() {
-        return getAllItemNames(orderRepository.findAll());
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getOrdersWithCustomer() {
-        return getAllItemNames(orderRepository.getAllBy());
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getOrdersWithOrderItems() {
-        return getAllItemNames(orderRepository.readAllBy());
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getOrdersWithCustomerAndOrderItems() {
-        return getAllItemNames(orderRepository.queryAllBy());
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getOrdersWithCustomerAndOrderItemsAndItem() {
-        return getAllItemNames(orderRepository.findAllBy());
+    public List<String> getPagedItemNames(Pageable pageable) {
+        // NOTE #2: Pagination + Fetch JOIN 쿼리를 실행
+        Page<Order> orderPage = orderRepository.getPagedOrderWithAssociations(pageable);
+        return getAllItemNames(orderPage.getContent());
     }
 
     private List<String> getAllItemNames(List<Order> orders) {
