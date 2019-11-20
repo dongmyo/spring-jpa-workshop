@@ -99,16 +99,13 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> getPagedItemNames(Pageable pageable) {
-        // NOTE #3: Pagination 쿼리 실행
         Page<OrderIdGetter> orderIdPage = orderRepository.findAllBy(pageable);
 
-        // NOTE #4: Pagination 쿼리로 추출한 ID 값
         Set<Long> orderIds = orderIdPage.getContent()
                                         .stream()
                                         .map(OrderIdGetter::getOrderId)
                                         .collect(Collectors.toSet());
 
-        // NOTE #5: ID 조건을 가지고 Fetch JOIN을 수행
         List<Order> orders = orderRepository.getOrderWithAssociations(orderIds);
 
         return getAllItemNames(orders);

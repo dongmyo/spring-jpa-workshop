@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    // NOTE #1: Pagination 쿼리로 ID만 가져온다
     Page<OrderIdGetter> findAllBy(Pageable pageable);
 
-    // NOTE #2. ID 조건에 해당하는 Entity들에만 Fetch JOIN 적용
     @Query("select o from Order as o"
            + " inner join fetch o.customer as c"
            + " left join fetch o.orderItems as oi"

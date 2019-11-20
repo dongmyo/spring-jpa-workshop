@@ -1,15 +1,21 @@
 package com.nhn.workshop.jpa.service;
 
+import com.nhn.workshop.jpa.dto.MemberIdGetter;
 import com.nhn.workshop.jpa.entity.Member;
 import com.nhn.workshop.jpa.entity.MemberDetail;
 import com.nhn.workshop.jpa.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,6 +72,25 @@ public class MemberService {
                                .map(MemberDetail::getDescription)
                                .filter(Objects::nonNull)
                                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getPagedMemberDetails(Pageable pageable) {
+        // TODO #3: Pagination 쿼리 실행
+        Page<MemberIdGetter> memberIdPage = Page.empty(pageable);
+
+        // TODO #4: Pagination 쿼리로 추출한 ID 값
+        Set<Long> memberIds = new HashSet<>();
+
+        // TODO #5: ID 조건을 가지고 Fetch JOIN을 수행
+        List<Member> members = new ArrayList<>();
+
+        return members.stream()
+                      .map(Member::getDetails)
+                      .flatMap(Collection::stream)
+                      .map(MemberDetail::getDescription)
+                      .filter(Objects::nonNull)
+                      .collect(Collectors.toList());
     }
 
 }

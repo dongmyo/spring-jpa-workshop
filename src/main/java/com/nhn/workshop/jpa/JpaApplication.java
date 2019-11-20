@@ -1,5 +1,6 @@
 package com.nhn.workshop.jpa;
 
+import com.nhn.workshop.jpa.service.MemberService;
 import com.nhn.workshop.jpa.service.OrderService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,10 +19,10 @@ public class JpaApplication {
     }
 
     @Bean
-    CommandLineRunner onStartUp(OrderService orderService) {
+    CommandLineRunner onStartUp(MemberService memberService) {
         return args -> {
-            orderService.createOrderWithDetails();
-            orderService.getPagedItemNames(PageRequest.of(0, 2));
+            memberService.createMemberWithDetails();
+            memberService.getPagedMemberDetails(PageRequest.of(0, 2));
         };
     }
 
