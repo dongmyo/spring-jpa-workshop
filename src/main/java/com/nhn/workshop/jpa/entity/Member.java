@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,5 +27,8 @@ public class Member {
 
     @Column(name = "create_dt")
     private LocalDateTime createDate;
+
+    // TODO: 연관관계 설정.
+    private List<MemberDetail> details = new ArrayList<>();
 
 }

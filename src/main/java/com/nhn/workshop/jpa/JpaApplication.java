@@ -1,6 +1,6 @@
 package com.nhn.workshop.jpa;
 
-import com.nhn.workshop.jpa.service.OrderService;
+import com.nhn.workshop.jpa.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,9 +17,9 @@ public class JpaApplication {
     }
 
     @Bean
-    CommandLineRunner onStartUp(OrderService orderService) {
+    CommandLineRunner onStartUp(MemberService memberService) {
         return args -> {
-            orderService.createOrderWithDetails();
+            memberService.createMemberWithDetails();
         };
     }
 
