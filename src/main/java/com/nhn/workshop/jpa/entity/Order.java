@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -29,8 +28,8 @@ public class Order {
     @Column(name = "order_dt")
     private LocalDateTime orderDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
+    // NOTE: "mappedBy" 속성 설정, @JoinColumn은 없앰.
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderDetail> details = new ArrayList<>();
 
 }

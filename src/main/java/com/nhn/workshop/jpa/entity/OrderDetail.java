@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Getter
@@ -20,8 +22,10 @@ public class OrderDetail {
     @Column(name = "order_detail_id")
     private Long orderDetailId;
 
-    @Column(name = "order_id")
-    private Long orderId;
+    // NOTE: 연관관계 설정 (@ManyToOne, @JoinColumn)
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     private String type;
 

@@ -22,20 +22,21 @@ public class OrderService {
     public void createOrderWithDetails() {
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
-        order = orderRepository.save(order);
 
         OrderDetail orderDetail1 = new OrderDetail();
-        orderDetail1.setOrderId(order.getOrderId());
+        orderDetail1.setOrder(order);
         orderDetail1.setType("type1");
         orderDetail1.setDescription("order1-type1");
 
         OrderDetail orderDetail2 = new OrderDetail();
-        orderDetail2.setOrderId(order.getOrderId());
+        orderDetail2.setOrder(order);
         orderDetail2.setType("type2");
         orderDetail2.setDescription("order1-type2");
 
         order.getDetails().add(orderDetail1);
         order.getDetails().add(orderDetail2);
+
+        orderRepository.save(order);
     }
 
 }
