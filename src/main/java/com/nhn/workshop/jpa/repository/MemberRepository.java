@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    @Query("select m from Member as m left join fetch m.details as md")
-    List<Member> getMembersWithDetails();
+    // TODO : @EntityGraph로 설정한 Entity Graph를 이용
+    @Query("select m from Member m")
+    List<Member> getAllBy();
 
 }

@@ -59,7 +59,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<String> getAllMemberDescriptions() {
-        return memberRepository.getMembersWithDetails()
+        return memberRepository.getAllBy()
                                .stream()
                                .map(Member::getDetails)
                                .flatMap(Collection::stream)

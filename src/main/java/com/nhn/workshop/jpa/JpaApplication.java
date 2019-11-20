@@ -1,6 +1,6 @@
 package com.nhn.workshop.jpa;
 
-import com.nhn.workshop.jpa.service.OrderService;
+import com.nhn.workshop.jpa.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,20 +17,10 @@ public class JpaApplication {
     }
 
     @Bean
-    CommandLineRunner onStartUp(OrderService orderService) {
+    CommandLineRunner onStartUp(MemberService memberService) {
         return args -> {
-            orderService.createOrderWithDetails();
-
-
-            // NOTE #8: orderRepository.findAll() -> N + 1 문제 발생
-            orderService.getOrdersByFindAll();
-
-            // NOTE #11: Entity Graph 적용
-
-            orderService.getOrdersWithCustomer();
-            orderService.getOrdersWithOrderItems();
-            orderService.getOrdersWithCustomerAndOrderItems();
-            orderService.getOrdersWithCustomerAndOrderItemsAndItem();
+            memberService.createMemberWithDetails();
+            memberService.getAllMemberDescriptions();
         };
     }
 

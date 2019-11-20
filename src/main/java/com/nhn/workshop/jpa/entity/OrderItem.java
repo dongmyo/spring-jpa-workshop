@@ -26,7 +26,6 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    // NOTE #4: OrderItem-Item 연관관계 설정
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;

@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// NOTE #9: Entity Graph 설정 - @NamedEntityGraph, @NamedAttributeNode, @NamedSubgraph
-
 @NamedEntityGraphs({
         @NamedEntityGraph(name = "orderWithCustomer", attributeNodes = {
                 @NamedAttributeNode("customer")
@@ -38,7 +36,6 @@ public class Order {
     @Column(name = "order_id")
     private Long orderId;
 
-    // NOTE #2: Order-Customer 연관관계 설정
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;

@@ -33,7 +33,6 @@ public class OrderService {
     }
 
 
-    // NOTE #7: Customer, Item, Order, OrderItem 데이터 생성
     @Transactional
     public void createOrderWithDetails() {
         Item apple = new Item();

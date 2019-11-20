@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-// NOTE #3: Item Entity
 @Getter
 @Setter
 @Entity
