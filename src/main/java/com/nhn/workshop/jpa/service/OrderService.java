@@ -57,7 +57,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> getOrdersDescriptions() {
-        // NOTE: select * from Orders
+        // select * from Orders
         return orderRepository.findAll()
                               .stream()
                               .map(Order::getDetails)
@@ -69,7 +69,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> readOrdersDescriptions() {
-        // NOTE: select o.*, od.* from Orders as o left join OrderDetails od on o.order_id = od.order_id
+        // select o.*, od.* from Orders as o left join OrderDetails od on o.order_id = od.order_id
         return orderRepository.getOrderWithDetails()
                               .stream()
                               .map(Order::getDetails)

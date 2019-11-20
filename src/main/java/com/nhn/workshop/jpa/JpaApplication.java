@@ -1,5 +1,6 @@
 package com.nhn.workshop.jpa;
 
+import com.nhn.workshop.jpa.service.MemberService;
 import com.nhn.workshop.jpa.service.OrderService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,14 +18,10 @@ public class JpaApplication {
     }
 
     @Bean
-    CommandLineRunner onStartUp(OrderService orderService) {
+    CommandLineRunner onStartUp(MemberService memberService) {
         return args -> {
-            orderService.createOrderWithDetails();
-
-            // NOTE: orderRepository.findAll() -> N + 1 문제 발생
-            orderService.getOrdersDescriptions();
-            // NOTE: orderRepository.getOrderWithDetails() -> FETCH JOIN 적용
-            orderService.readOrdersDescriptions();
+            memberService.createMemberWithDetails();
+            memberService.getAllMemberDescriptions();
         };
     }
 
