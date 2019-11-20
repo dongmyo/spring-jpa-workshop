@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    // TODO: N + 1 문제를 Fetch Join으로 해결하세요.
     @Query("select m from Member as m left join fetch m.details as md")
     List<Member> getMembersWithDetails();
 

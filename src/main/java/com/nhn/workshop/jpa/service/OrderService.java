@@ -1,82 +1,131 @@
 package com.nhn.workshop.jpa.service;
 
+import com.nhn.workshop.jpa.entity.Customer;
+import com.nhn.workshop.jpa.entity.Item;
 import com.nhn.workshop.jpa.entity.Order;
-import com.nhn.workshop.jpa.entity.OrderDetail;
+import com.nhn.workshop.jpa.entity.OrderItem;
+import com.nhn.workshop.jpa.repository.CustomerRepository;
+import com.nhn.workshop.jpa.repository.ItemRepository;
 import com.nhn.workshop.jpa.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+    private final CustomerRepository customerRepository;
+    private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
 
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(CustomerRepository customerRepository,
+                        ItemRepository itemRepository,
+                        OrderRepository orderRepository) {
+        this.customerRepository = customerRepository;
+        this.itemRepository = itemRepository;
         this.orderRepository = orderRepository;
     }
 
 
+    // NOTE #7: Customer, Item, Order, OrderItem 데이터 생성
     @Transactional
     public void createOrderWithDetails() {
-        Order order = new Order();
-        order.setOrderDate(LocalDateTime.now());
+        Item apple = new Item();
+        apple.setItemName("apple");
+        apple.setItemPrice(100L);
+        apple = itemRepository.save(apple);
 
-        OrderDetail orderDetail1 = new OrderDetail();
-        orderDetail1.setOrder(order);
-        orderDetail1.setType("type1");
-        orderDetail1.setDescription("order1-type1");
+        Item orange = new Item();
+        orange.setItemName("orange");
+        orange.setItemPrice(200L);
+        orange = itemRepository.save(orange);
 
-        OrderDetail orderDetail2 = new OrderDetail();
-        orderDetail2.setOrder(order);
-        orderDetail2.setType("type2");
-        orderDetail2.setDescription("order1-type2");
+        Item banana = new Item();
+        banana.setItemName("banana");
+        banana.setItemPrice(300L);
+        banana = itemRepository.save(banana);
 
-        order.getDetails().add(orderDetail1);
-        order.getDetails().add(orderDetail2);
+        Customer customer1 = new Customer();
+        customer1.setCustomerName("customer1");
+        customer1 = customerRepository.save(customer1);
 
-        orderRepository.save(order);
+        OrderItem orderItem1_1 = new OrderItem();
+        orderItem1_1.setItem(apple);
+        orderItem1_1.setQuantity(10L);
 
-        Order order2 = new Order();
-        order2.setOrderDate(LocalDateTime.now());
+        OrderItem orderItem1_2 = new OrderItem();
+        orderItem1_2.setItem(banana);
+        orderItem1_2.setQuantity(2L);
 
-        OrderDetail orderDetail3 = new OrderDetail();
-        orderDetail3.setOrder(order2);
-        orderDetail3.setType("type1");
-        orderDetail3.setDescription("order2-type1");
+        Order order1_1 = new Order();
+        order1_1.setCustomer(customer1);
+        order1_1.setOrderDate(LocalDateTime.now());
+        order1_1.setOrderItems(Arrays.asList(orderItem1_1, orderItem1_2));
+        orderRepository.save(order1_1);
 
-        order2.getDetails().add(orderDetail3);
+        Customer customer2 = new Customer();
+        customer2.setCustomerName("customer2");
+        customer2 = customerRepository.save(customer2);
 
-        orderRepository.save(order2);
+        OrderItem orderItem2_1 = new OrderItem();
+        orderItem2_1.setItem(orange);
+        orderItem2_1.setQuantity(3L);
+
+        Order order2_1 = new Order();
+        order2_1.setCustomer(customer2);
+        order2_1.setOrderDate(LocalDateTime.now());
+        order2_1.setOrderItems(Collections.singletonList(orderItem2_1));
+        orderRepository.save(order2_1);
+
+        OrderItem orderItem2_2 = new OrderItem();
+        orderItem2_2.setItem(banana);
+        orderItem2_2.setQuantity(5L);
+
+        Order order2_2 = new Order();
+        order2_2.setCustomer(customer2);
+        order2_2.setOrderDate(LocalDateTime.now());
+        order2_2.setOrderItems(Collections.singletonList(orderItem2_2));
+        orderRepository.save(order2_2);
     }
 
     @Transactional(readOnly = true)
-    public List<String> getOrdersDescriptions() {
-        // select * from Orders
-        return orderRepository.findAll()
-                              .stream()
-                              .map(Order::getDetails)
-                              .flatMap(Collection::stream)
-                              .map(OrderDetail::getDescription)
-                              .filter(Objects::nonNull)
-                              .collect(Collectors.toList());
+    public List<String> getOrdersByFindAll() {
+        return getAllItemNames(orderRepository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public List<String> readOrdersDescriptions() {
-        // select o.*, od.* from Orders as o left join OrderDetails od on o.order_id = od.order_id
-        return orderRepository.getOrderWithDetails()
-                              .stream()
-                              .map(Order::getDetails)
-                              .flatMap(Collection::stream)
-                              .map(OrderDetail::getDescription)
-                              .filter(Objects::nonNull)
-                              .collect(Collectors.toList());
+    public List<String> getOrdersWithCustomer() {
+        return getAllItemNames(orderRepository.getAllBy());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getOrdersWithOrderItems() {
+        return getAllItemNames(orderRepository.readAllBy());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getOrdersWithCustomerAndOrderItems() {
+        return getAllItemNames(orderRepository.queryAllBy());
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getOrdersWithCustomerAndOrderItemsAndItem() {
+        return getAllItemNames(orderRepository.findAllBy());
+    }
+
+    private List<String> getAllItemNames(List<Order> orders) {
+        return orders.stream()
+                     .map(Order::getOrderItems)
+                     .flatMap(Collection::stream)
+                     .map(OrderItem::getItem)
+                     .map(Item::getItemName)
+                     .collect(Collectors.toList());
     }
 
 }

@@ -15,19 +15,22 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Entity
-@Table(name = "OrderDetails")
-public class OrderDetail {
+@Table(name = "OrderItems")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "order_detail_id")
-    private Long orderDetailId;
+    @Column(name = "order_line_id")
+    private Long orderLineId;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-    private String type;
+    // NOTE #4: OrderItem-Item 연관관계 설정
+    @ManyToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
 
-    private String description;
+    private Long quantity;
 
 }
